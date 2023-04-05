@@ -25,27 +25,29 @@ void setup()
 }
 void loop()
 {
+	string spO2_res, hb_res, gpsResult;
+	float temp, val;
 	if (Serial.available() > 0)
 	{
 		// GPS
-		string gpsResult = GPS.read();
+		gpsResult = GPS.read();
 		Serial.println(gpsResult);
 
 		// pox(Vitals)
 		if (pox.begin())
 		{
-			string spO2_res = pox.getSpO2();
-			string hb_res = pox.getHeartRate();
+			spO2_res = pox.getSpO2();
+			hb_res = pox.getHeartRate();
 			Serial.println("Oxygen percentage: " + spO2_res + "; Heart rate: " + hb_res);
 		}
 		digitalWrite(3, HIGH);
 
 		// Temperature
-		float temp = analogRead(A1) / 1023.0 * 5.0 * 100.0;
+		temp = analogRead(A1) / 1023.0 * 5.0 * 100.0;
 		Serial.println("temperature: " + to_string(temp));
 
-		// Sounce Sensor
-		float val = digitalRead(sensorPin);
+		// Sound Sensor
+		val = digitalRead(sensorPin);
 		if (val == HIGH)
 		{
 			digitalWrite(ledPin, HIGH);
@@ -57,7 +59,14 @@ void loop()
 		}
 
 		// network
-		string msg = "Your message here";
+		string msg = "";
+		string values[5] = {gpsResult, spO2_res, hb_res, to_string(temp), to_string(val)};
+		for (int i = 0;i < 5; i++) {
+			msg += values[i];
+			if (i != 4) {
+				msg += ",";
+			}
+		}
 		Serial.sendMessage(0, msg, "1680090096354");
 	}
 	else
