@@ -31,20 +31,20 @@ void loop()
 	{
 		// GPS
 		gpsResult = GPS.read();
-		Serial.println(gpsResult);
+		//Serial.println(gpsResult);
 
 		// pox(Vitals)
 		if (pox.begin())
 		{
 			spO2_res = pox.getSpO2();
 			hb_res = pox.getHeartRate();
-			Serial.println("Oxygen percentage: " + spO2_res + "; Heart rate: " + hb_res);
+			//Serial.println("Oxygen percentage: " + spO2_res + "; Heart rate: " + hb_res);
 		}
 		digitalWrite(3, HIGH);
 
 		// Temperature
 		temp = analogRead(A1) / 1023.0 * 5.0 * 100.0;
-		Serial.println("temperature: " + to_string(temp));
+		//Serial.println("temperature: " + to_string(temp));
 
 		// Sound Sensor
 		val = digitalRead(sensorPin);
@@ -54,20 +54,27 @@ void loop()
 		}
 		else
 		{
-			Serial.println(val);
+			//Serial.println(val);
 			digitalWrite(ledPin, LOW);
 		}
 
 		// network
 		string msg = "";
-		string values[5] = {gpsResult, spO2_res, hb_res, to_string(temp), to_string(val)};
+		/**
+		string values[5] = {"GPS : " + gpsResult, "O2 : " + spO2_res, "HB : " + hb_res, "TMP : " + to_string(temp), "SND : " + to_string(val)};
 		for (int i = 0;i < 5; i++) {
 			msg += values[i];
 			if (i != 4) {
 				msg += ",";
 			}
 		}
-		Serial.sendMessage(0, msg, "1680090096354");
+		**/
+		//msg = "{\"GPS\":[" + to_string(gpsResult[0]) + "," + to_string(gpsResult[1]) + "],\"TMP\":" + to_string(temp) + ",\"O2\":" + spO2_res + ",\"HB\":" + hb_res + ",\"SND\":" + to_string(val) + "}";
+		msg = "{GPS:[" + to_string(gpsResult[0]) + "," + to_string(gpsResult[1]) + "],TMP:" + to_string(temp) + ",O2:" + spO2_res + ",HB:" + hb_res + ",SND:" + to_string(val) + "}";
+		//Serial.sendMessage(0, msg, "1680090096354");
+		//Serial.sendMessage(0, msg, "1680659331923");
+		Serial.sendMessage(0, msg);
+        
 	}
 	else
 	{
