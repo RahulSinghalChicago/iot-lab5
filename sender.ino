@@ -14,9 +14,10 @@ void setup()
 	// Temperature
 	pinMode(A1, INPUT);
 
-	// Sound Sensor
-	pinMode(sensorPin, INPUT);
-	pinMode(ledPin, OUTPUT);
+	// Air Quality Sensor
+	pinMode(A2, INPUT);
+	pinMode(3, OUTPUT);
+	pinMode(8, INPUT);
 
 	// network
 	pinMode(0, OUTPUT);
@@ -26,7 +27,7 @@ void setup()
 void loop()
 {
 	string spO2_res, hb_res, gpsResult;
-	float temp, val;
+	float temp, air_res;
 	if (Serial.available() > 0)
 	{
 		// GPS
@@ -46,17 +47,16 @@ void loop()
 		temp = analogRead(A1) / 1023.0 * 5.0 * 100.0;
 		//Serial.println("temperature: " + to_string(temp));
 
-		// Sound Sensor
-		val = digitalRead(sensorPin);
-		if (val == HIGH)
-		{
-			digitalWrite(ledPin, HIGH);
-		}
+		// Air Quality Sensor
+		air_res = analogRead(A2);
+		delay(100);
+		Serial.write("ppm: " + to_string(air_res));
+		int digitalResult = digitalRead(8);
+		delay(100);
+		if (digitalResult == HIGH)
+			digitalWrite(3, HIGH);
 		else
-		{
-			//Serial.println(val);
-			digitalWrite(ledPin, LOW);
-		}
+			digitalWrite(3, LOW);
 
 		// network
 		string msg = "";
@@ -70,7 +70,7 @@ void loop()
 		}
 		**/
 		//msg = "{\"GPS\":[" + to_string(gpsResult[0]) + "," + to_string(gpsResult[1]) + "],\"TMP\":" + to_string(temp) + ",\"O2\":" + spO2_res + ",\"HB\":" + hb_res + ",\"SND\":" + to_string(val) + "}";
-		msg = "{GPS:[" + to_string(gpsResult[0]) + "," + to_string(gpsResult[1]) + "],TMP:" + to_string(temp) + ",O2:" + spO2_res + ",HB:" + hb_res + ",SND:" + to_string(val) + "}";
+		msg = "{GPS:[" + to_string(gpsResult[0]) + "," + to_string(gpsResult[1]) + "],TMP:" + to_string(temp) + ",O2:" + spO2_res + ",HB:" + hb_res + ",AIR:" + to_string(air_res) + "}";
 		//Serial.sendMessage(0, msg, "1680090096354");
 		//Serial.sendMessage(0, msg, "1680659331923");
 		Serial.sendMessage(0, msg);
