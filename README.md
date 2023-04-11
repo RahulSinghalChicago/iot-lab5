@@ -1,4 +1,5 @@
 # iot-lab5
 
+our device with Arduino, GPS, Pulse Oximeter, Temperature, and Air Quality Sensor.
 
-![Screenshot 2023-04-04 at 9 01 04 PM](https://user-images.githubusercontent.com/3970349/229961824-074b121e-e876-48f8-b784-1912eb6c671b.png)
+![image](https://user-images.githubusercontent.com/8579255/231076239-fa8dd718-6575-4f12-a3e6-a85a7a5a0785.png)
